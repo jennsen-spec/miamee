@@ -23,6 +23,14 @@ de chaque phase sont dans [PLAN.md](PLAN.md).
 Aucune clé secrète ne vit dans ce dépôt. La clé Gemini est stockée comme secret de
 fonction serveur chez Supabase et n'est jamais envoyée au téléphone.
 
+## Ressources du projet
+
+| | |
+|---|---|
+| App en ligne | https://jennsen-spec.github.io/miamee/ |
+| Base de données | projet Supabase `miamee`, région `ca-central-1` |
+| Déploiement | GitHub Actions → GitHub Pages, à chaque push sur `main` |
+
 ## Développement
 
 ```bash
