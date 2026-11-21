@@ -4,6 +4,7 @@ const url = import.meta.env.VITE_SUPABASE_URL
 const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
 export const supabaseUrl = url ?? ''
+export const supabaseAnonKey = anonKey ?? ''
 export const supabaseConfigured = Boolean(url && anonKey)
 
 // Volontairement nul quand la configuration manque : l'app doit pouvoir

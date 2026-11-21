@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { supabaseConfigured, supabaseUrl } from './lib/supabase'
+import { supabaseAnonKey, supabaseConfigured, supabaseUrl } from './lib/supabase'
 
 type Status = 'attente' | 'ok' | 'avertissement' | 'echec'
 
@@ -73,7 +73,9 @@ async function runChecks(): Promise<Check[]> {
 
   if (supabaseConfigured) {
     try {
-      const res = await fetch(`${supabaseUrl}/auth/v1/health`)
+      const res = await fetch(`${supabaseUrl}/auth/v1/health`, {
+        headers: { apikey: supabaseAnonKey },
+      })
       out.push({
         id: 'sb-reach',
         label: 'Supabase joignable',
