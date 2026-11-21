@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #12201a;
+  --color-ink-soft: #1b2e24;
+  --color-ink-line: #2b4836;
+  --color-cream: #efe7d6;
+  --color-cream-dim: #a8b5ab;
+  --color-food: #d4752f;
+  --color-ok: #5cc98a;
+  --color-warn: #e0b341;
+  --color-bad: #e3705f;
+}
+
+html, body, #root { height: 100%; }
+
+body {
+  background: var(--color-ink);
+  color: var(--color-cream);
+  -webkit-font-smoothing: antialiased;
+  font-family: ui-rounded, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  /* Empeche le rebond elastique facon page web quand l'app est installee. */
+  overscroll-behavior-y: none;
+}
