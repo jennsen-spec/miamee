@@ -20,7 +20,7 @@ function titreDuJour(d: Date): string {
   return d.toLocaleDateString('fr-CA', { weekday: 'long', day: 'numeric', month: 'long' })
 }
 
-export default function Today({ onAdd, onSignOut }: { onAdd: () => void; onSignOut: () => void }) {
+export default function Today({ onAdd }: { onAdd: () => void }) {
   const [day, setDay] = useState(() => startOfDay(new Date()))
   const [entries, setEntries] = useState<Entry[]>([])
   const [loading, setLoading] = useState(true)
@@ -66,12 +66,7 @@ export default function Today({ onAdd, onSignOut }: { onAdd: () => void; onSignO
   return (
     <div className="mx-auto max-w-md px-5 pb-32"
          style={{ paddingTop: 'max(1.25rem, env(safe-area-inset-top))' }}>
-      <div className="flex items-center justify-between">
-        <h1 className="text-sm font-medium">Miamee</h1>
-        <button onClick={onSignOut} className="px-1 py-2 text-xs text-cream-dim">
-          Se déconnecter
-        </button>
-      </div>
+      <h1 className="text-sm font-medium">Miamee</h1>
 
       {/* Navigation entre les jours */}
       <div className="mt-5 flex items-center justify-between">
