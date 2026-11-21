@@ -31,6 +31,24 @@ fonction serveur chez Supabase et n'est jamais envoyée au téléphone.
 | Base de données | projet Supabase `miamee`, région `ca-central-1` |
 | Déploiement | GitHub Actions → GitHub Pages, à chaque push sur `main` |
 
+## Base de données
+
+Le schéma vit dans le projet Supabase, appliqué sous forme de migrations nommées :
+`schema_journal_alimentaire`, `vues_totaux`, `normalisation_des_noms`,
+`mesures_menageres_initiales`, `restreindre_handle_new_user`.
+
+| Table | Rôle |
+|---|---|
+| `foods` | 2 298 aliments génériques, table Ciqual 2020 de l'ANSES, valeurs pour 100 g |
+| `products` | les produits de marque scannés par l'utilisateur ; `food_id` porte l'appariement |
+| `portions` | mesures ménagères (cuillère à café, gros champignon…) converties en grammes |
+| `entries` | un repas ou une collation, avec son heure exacte |
+| `entry_items` | les lignes, **valeurs nutritionnelles figées** et drapeau pesé/estimé |
+| `daily_totals`, `weekly_totals` | vues de totaux, calculées dans le fuseau du profil |
+
+Chaque table est protégée par RLS : un compte ne voit que ses propres données. Les
+référentiels `foods` et `portions` sont en lecture seule via l'API.
+
 ## Développement
 
 ```bash
