@@ -207,14 +207,17 @@ function Erreur({ erreur, onManuel }:
       quoiFaire: <>La reconnaissance d'image ne peut pas fonctionner sans elle.</>,
     },
     facturation: {
-      titre: 'Le projet Google de la clé est bloqué',
+      titre: 'Le compte de facturation Google est à zéro',
       quoiFaire: (
         <>
-          Ses crédits prépayés sont épuisés, ce qui coupe aussi le palier gratuit. Crée une clé
-          dans un <span className="text-cream">nouveau</span> projet sur{' '}
-          <a href="https://aistudio.google.com/apikey" className="text-food underline underline-offset-4">
-            aistudio.google.com/apikey
-          </a>.
+          Ses crédits prépayés sont épuisés. Tous les projets rattachés à ce compte s'arrêtent
+          ensemble, donc <span className="text-cream">créer une clé ailleurs ne suffit pas</span>.
+          Sur{' '}
+          <a href="https://ai.studio/projects" className="text-food underline underline-offset-4">
+            ai.studio/projects
+          </a>
+          , désactive la facturation du projet pour revenir au palier gratuit, ou recharge des
+          crédits.
         </>
       ),
     },

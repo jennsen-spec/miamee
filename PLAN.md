@@ -11,7 +11,7 @@ ce qui est mangé. Pas de recommandation, pas de jugement, pas d'objectif de poi
 | Hébergement | GitHub Pages, dépôt public `miamee` | gratuit ; aucun secret dans le code |
 | Base de données | Supabase (projet dédié, palier gratuit) | Postgres + auth + stockage photos + fonctions serveur |
 | Reconnaissance d'image | Gemini `gemini-3.5-flash-lite`, palier gratuit | seul fournisseur avec un palier gratuit pour l'image |
-| Clé Gemini | doit provenir d'un projet AI Studio **sans facturation attachée** | un projet en facturation prépayée épuisée renvoie 402 et refuse tout appel |
+| Clé Gemini | projet AI Studio au **palier gratuit**, facturation désactivée | le palier se décide au niveau du *compte de facturation*, pas du projet : à zéro crédit prépayé, toutes les clés de tous ses projets renvoient 402 ensemble |
 | Produits emballés | code-barres → Open Food Facts, **et** photo du tableau nutritionnel → Gemini | le code-barres est exact et gratuit ; la photo couvre le reste |
 | Aliments génériques | extrait de la table CIQUAL (ANSES) | référence française, libre, évite d'appeler l'IA |
 | Coût mensuel visé | 0 $ | tous les paliers gratuits |
