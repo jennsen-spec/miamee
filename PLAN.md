@@ -70,6 +70,15 @@ choisirait presque toujours quelque chose dans la liste fournie, même à tort. 
 l'identification de l'appariement supprime ce biais, coûte moins de tokens, et rend la règle
 vérifiable.
 
+Une découverte faite en chargeant les données a obligé à compléter ce mécanisme : **la table
+Ciqual n'a pas d'entrée « coquillettes » ni « spaghetti »**, toutes les formes de pâtes renvoyant
+à « Pâtes sèches standard ». L'aliment générique ne suffisait donc pas à distinguer deux paquets.
+Chaque produit porte en plus la **forme précise observée** (`products.kind`), et un produit n'est
+candidat que si cette forme correspond à ce qui est vu dans l'assiette.
+
+Le modèle ne fournit jamais de calories, seulement une identification et une estimation de poids.
+Les valeurs viennent de la table de référence, ce qui les rend stables et vérifiables.
+
 ## Modèle de données
 
 Référentiels :

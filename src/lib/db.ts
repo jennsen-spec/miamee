@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import { normalize, num } from './nutrition'
+import { num } from './nutrition'
 import type { DraftItem, Entry, Food, MealType, Portion } from './types'
 
 function db() {
@@ -7,38 +7,19 @@ function db() {
   return supabase
 }
 
-const FOOD_COLS =
-  'id, name, categorie, kcal, protein_g, carb_g, sugar_g, fat_g, satfat_g, fiber_g, sodium_mg'
-
 const ITEM_COLS =
   'id, label, quantity_g, quantity_display, quantity_source, ' +
   'kcal, protein_g, carb_g, sugar_g, fat_g, satfat_g, fiber_g, sodium_mg'
 
 /**
- * Recherche dans le referentiel. Chaque mot doit apparaitre, ce qui
- * laisse taper « pomme terre » pour trouver « Pomme de terre ».
+ * Recherche dans le referentiel. Deleguee a la fonction SQL, qui gere
+ * les synonymes (« coquillettes » -> pates) et refuse les faux amis.
  */
 export async function searchFoods(query: string): Promise<Food[]> {
-  const words = normalize(query).split(/\s+/).filter((w) => w.length >= 2)
-  if (words.length === 0) return []
-
-  let q = db().from('foods').select(FOOD_COLS)
-  for (const w of words) q = q.like('name_norm', `%${w}%`)
-
-  const { data, error } = await q.limit(40)
+  if (query.trim().length < 2) return []
+  const { data, error } = await db().rpc('rechercher_aliments', { terme: query, limite: 25 })
   if (error) throw error
-
-  const first = words[0] ?? ''
-  // Les noms courts sont les plus generiques : « Pomme de terre, crue »
-  // doit passer avant « Pomme de terre, dauphine, surgelee, cuite ».
-  return (data ?? [])
-    .map((f) => ({ ...f, kcal: num(f.kcal) }) as Food)
-    .sort((a, b) => {
-      const aStarts = normalize(a.name).startsWith(first) ? 0 : 1
-      const bStarts = normalize(b.name).startsWith(first) ? 0 : 1
-      return aStarts - bStarts || a.name.length - b.name.length
-    })
-    .slice(0, 25)
+  return ((data ?? []) as Food[]).map((f) => ({ ...f, kcal: num(f.kcal) }))
 }
 
 /** Mesures menageres propres a l'aliment, puis les generiques. */
@@ -70,6 +51,8 @@ export async function saveEntry(input: {
   title: string | null
   note: string | null
   items: DraftItem[]
+  inputMethod?: 'manuel' | 'texte' | 'photo_plat' | 'photo_etiquette' | 'code_barres'
+  photoPath?: string | null
 }): Promise<number> {
   const { data: entry, error } = await db()
     .from('entries')
@@ -78,7 +61,8 @@ export async function saveEntry(input: {
       meal_type: input.mealType,
       title: input.title,
       note: input.note,
-      input_method: 'manuel',
+      input_method: input.inputMethod ?? 'manuel',
+      photo_path: input.photoPath ?? null,
     })
     .select('id')
     .single()
@@ -100,6 +84,8 @@ export async function saveEntry(input: {
     satfat_g: it.satfat_g,
     fiber_g: it.fiber_g,
     sodium_mg: it.sodium_mg,
+    confidence: it.confidence ?? null,
+    ai_raw: it.ai_raw ?? null,
   }))
 
   const { error: itemsError } = await db().from('entry_items').insert(rows)
@@ -114,4 +100,19 @@ export async function saveEntry(input: {
 export async function deleteEntry(id: number): Promise<void> {
   const { error } = await db().from('entries').delete().eq('id', id)
   if (error) throw error
+}
+
+/** Envoie la photo dans l'espace prive du compte et rend son chemin. */
+export async function envoyerPhoto(blob: Blob): Promise<string> {
+  const { data: u } = await db().auth.getUser()
+  const uid = u.user?.id
+  if (!uid) throw new Error('Compte introuvable.')
+
+  const chemin = `${uid}/${crypto.randomUUID()}.jpg`
+  const { error } = await db().storage.from('repas').upload(chemin, blob, {
+    contentType: 'image/jpeg',
+    upsert: false,
+  })
+  if (error) throw error
+  return chemin
 }

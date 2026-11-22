@@ -3,6 +3,7 @@ import type { Session } from '@supabase/supabase-js'
 import { supabase, supabaseConfigured } from './lib/supabase'
 import Today from './screens/Today'
 import AddEntry from './screens/AddEntry'
+import PhotoRepas from './screens/PhotoRepas'
 
 const DASHBOARD =
   'https://supabase.com/dashboard/project/mhmyjsndtxkzouiwvjly/auth/providers'
@@ -13,7 +14,7 @@ export default function App() {
   const [session, setSession] = useState<Session | null>(null)
   const [etat, setEtat] = useState<Etat>('chargement')
   const [message, setMessage] = useState<string | null>(null)
-  const [view, setView] = useState<'journal' | 'ajout'>('journal')
+  const [view, setView] = useState<'journal' | 'photo' | 'manuel'>('journal')
   const [reloadKey, setReloadKey] = useState(0)
   const tentee = useRef(false)
 
@@ -88,16 +89,29 @@ export default function App() {
     return <Ecran titre="Miamee"><p className="mt-3 text-sm text-cream-dim">Ouverture…</p></Ecran>
   }
 
-  if (view === 'ajout') {
+  const termine = () => { setReloadKey((k) => k + 1); setView('journal') }
+
+  if (view === 'photo') {
     return (
-      <AddEntry
+      <PhotoRepas
         onCancel={() => setView('journal')}
-        onDone={() => { setReloadKey((k) => k + 1); setView('journal') }}
+        onManuel={() => setView('manuel')}
+        onDone={termine}
       />
     )
   }
 
-  return <Today key={reloadKey} onAdd={() => setView('ajout')} />
+  if (view === 'manuel') {
+    return <AddEntry onCancel={() => setView('journal')} onDone={termine} />
+  }
+
+  return (
+    <Today
+      key={reloadKey}
+      onPhoto={() => setView('photo')}
+      onManuel={() => setView('manuel')}
+    />
+  )
 }
 
 function Ecran({ titre, children }: { titre: string; children: React.ReactNode }) {

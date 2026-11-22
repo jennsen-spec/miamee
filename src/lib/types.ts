@@ -34,6 +34,8 @@ export type DraftItem = Macros & {
   quantity_g: number | null
   quantity_display: string | null
   quantity_source: QuantitySource
+  confidence?: number | null
+  ai_raw?: unknown
 }
 
 export type Entry = {

@@ -20,7 +20,8 @@ function titreDuJour(d: Date): string {
   return d.toLocaleDateString('fr-CA', { weekday: 'long', day: 'numeric', month: 'long' })
 }
 
-export default function Today({ onAdd }: { onAdd: () => void }) {
+export default function Today({ onPhoto, onManuel }:
+  { onPhoto: () => void; onManuel: () => void }) {
   const [day, setDay] = useState(() => startOfDay(new Date()))
   const [entries, setEntries] = useState<Entry[]>([])
   const [loading, setLoading] = useState(true)
@@ -184,10 +185,13 @@ export default function Today({ onAdd }: { onAdd: () => void }) {
            style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
         <div className="mx-auto max-w-md px-5">
           <button
-            onClick={onAdd}
+            onClick={onPhoto}
             className="w-full rounded-xl bg-food px-4 py-3.5 text-base font-medium text-ink"
           >
-            Ajouter un repas
+            Photographier un repas
+          </button>
+          <button onClick={onManuel} className="mt-1 w-full py-2 text-xs text-cream-dim">
+            ou saisir à la main
           </button>
         </div>
       </div>
